@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <winbase.h>
 #endif
-#ifdef __linux
+#if defined(__linux) || defined(__APPLE__)
 #include <sys/types.h>
 #include <fcntl.h>
 #include <termios.h>
@@ -16,7 +16,7 @@
 #ifdef __MINGW32__
 static HANDLE hSerial;
 #endif
-#ifdef __linux
+#if defined(__linux) || defined(__APPLE__)
 static int fd;
 #endif
 
@@ -70,7 +70,7 @@ bool COM_Open(char *port, uint32_t baudrate, bool have_parity, bool two_stopbits
   //COM_Bytes = 0;
   #endif
 
-  #ifdef __linux
+  #if defined(__linux) || defined(__APPLE__)
   fd = open(port, O_RDWR | O_NOCTTY );
   if (fd <0)
     return false;
@@ -148,7 +148,7 @@ int COM_Write(uint8_t *data, uint16_t len)
 //  CloseHandle(ov.hEvent);
 //  return res;
   #endif
-  #ifdef __linux
+  #if defined(__linux) || defined(__APPLE__)
   int iOut = write(fd, data, len);
   if (iOut < 0)
     return -1;
@@ -192,7 +192,7 @@ int COM_Read(uint8_t *data, uint16_t len)
 //  }
   ReadFile(hSerial, data, len, &dwBytesRead, NULL);
   #endif
-  #ifdef __linux
+  #if defined(__linux) || defined(__APPLE__)
   int dwBytesRead = read(fd, data, len);
   if (dwBytesRead < 0)
     return -1;
@@ -234,7 +234,7 @@ void COM_Close(void)
   #ifdef __MINGW32__
   CloseHandle(hSerial);
   #endif
-  #ifdef __linux
+  #if defined(__linux) || defined(__APPLE__)
   close(fd);
   #endif
 }
